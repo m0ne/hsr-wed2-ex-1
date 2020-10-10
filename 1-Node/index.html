@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<title>WED2 - Node</title>
+		<link rel="icon" href="../HSR.Template.Exercises/icon-document.png" type="image/png">
+
+		<link rel="stylesheet" type="text/css" href="../HSR.Template.Exercises/documentStyle.css">
+		<script src="../HSR.Template.Exercises/solutions.js"></script>
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+		<style>
+			.important-code {
+			 font-size: 1.25em; padding: 0.5em 0; display: inline-block; background: white;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>
+			<a class="backlink" href="../index.html">⇦</a>
+			WED2 - Node
+			<button id="showSolutions">Lösungen anzeigen/ausblenden</button>
+		</h1>
+		
+
+		<h2>Installation</h2>
+		<ol>
+			<li>Installieren Sie die neuste Version von <a href="https://nodejs.org/en/download/current/">Node.js</a>.</li>
+			<li>Installieren Sie WebStorm oder eine alternative IDE.</li>
+			<li>Optional: Installieren Sie <a href="https://github.com/nvm-sh/nvm">nvm</a> bzw <a href="https://github.com/coreybutler/nvm-windows">nvm-windows</a>.</li>
+			
+		</ol>
+
+
+		<h2>Theorie</h2>
+		<p>Informationen über node.js finden Sie unter  <a href="https://nodejs.org/api/" target="_blank">https://nodejs.org/api/</a>.</p>
+
+
+		<h2>Debuggen</h2>
+		<p>Server Code kann problemlos debugged werden.   Nutzen Sie dieses Feature, wenn Sie nicht mehr weiterkommen!</p>
+		<ul>
+			<li>Webstorm:  <a href="https://www.jetbrains.com/help/webstorm/running-and-debugging-node-js.html" target="_blank">https://www.jetbrains.com/help/webstorm/running-and-debugging-node-js.html</a>.</li>
+			<li>Visual Studio Code: <a href="https://code.visualstudio.com/docs/nodejs/nodejs-debugging" target="_blank">https://code.visualstudio.com/docs/nodejs/nodejs-debugging</a></li>
+			<li>Ohne IDE: <a href="https://medium.com/the-node-js-collection/debugging-node-js-with-google-chrome-4965b5f910f4" target="_blank">https://medium.com/the-node-js-collection/debugging-node-js-with-google-chrome-4965b5f910f4</a>.</li>
+		</ul>
+
+
+
+		<h2>Node in der Console ausführen und Node Repetition WED1</h2>
+		<ol>
+			<li>Öffnen Sie eine Console (unter Windows: cmd.exe).</li>
+			<li>Starten Sie node innerhalb der console: node.exe</li>
+			<li>
+				Beantworten Sie folgende Fragen:
+				<ul>
+					<li>Sind typische globale Objekte von JavaScript wie window, document, console vorhanden?</li>
+					<li>Lässt sich JavaScript wie gewohnt verwenden?</li>
+					<li>Wie verhält sich node.js, wenn man auf eine undefinierte Variable zugreift?</li>
+					<li>Wo werden globale Variablen abgelegt? z.B. var x = 10.</li>
+					<li>Wie können Sie eine echte globale Variable erstellen?</li>
+				</ul>
+			</li>
+			<li>Beenden der Console mit CTRL + C.</li>
+		</ol>
+
+		<div class="solution">
+			<ul>
+				<li>window und document sind nur im browser vorhanden, console ist in node.js gegeben.</li>
+				<li>Ja</li>
+				<li>Exception</li>
+				<li>Im scope vom File. Node.js legt für jedes File einen eigenen Scope an.</li>
+				<li>global.x = 2</li>
+			</ul>
+		</div>
+
+
+		<h2>Hello World Server</h2>
+
+		<p>Erstellen Sie einen Server, welcher immer "Hello World" ausgibt.</p>
+		<p>Nutzen Sie dafür <a href="https://nodejs.org/api/http.html" target="_blank"> https://nodejs.org/api/http.html</a></p>
+		<p>Starten Sie den Server mit der Console: node.exe [filename] oder via Webstorm.</p>
+
+
+		<div class="solution">
+					<pre class="prettyprint"><code class="language-javascript"><!--
+-->require('http').createServer(function (req, res) {
+    res.end('Hello World');
+}).listen(3000);
+
+console.log('Server running at http://localhost:3000/');<!--
+					--></code></pre>
+		</div>
+
+
+
+		<h2>Hello World Server Version 2</h2>
+		<p>Erstellen Sie einen Server, welcher immer die angefragte URL ausgibt. z.B. http://localhost:3000/Test5105 sollte Ihr Server folgendes ausgeben: <strong>You requested /Test5105</strong>.</p>
+
+		<div class="solution">
+					<pre class="prettyprint"><code class="language-javascript"><!--
+-->const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('You requested ' + req.url);
+});
+
+server.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+});<!--
+					--></code></pre>
+		</div>
+
+
+
+		<h2>Routing 1</h2>
+		<p>Schreiben Sie einen Server, welcher folgende Anfragen beantwortet</p>
+		<ul>
+			<li>Route: /number
+				<ul>
+					<li>Senden die Zahlen 0 bis 50 zum Client.</li>
+					<li>Mit von und bis soll der Bereich definiert werden können  z.B. /number?von=10&bis=50. Finden Sie die dafür geeignetste API-Funktionalität.</li>
+					<li>Challange: Nutzen Sie keine for oder while</li>
+				</ul>
+			</li>
+
+			<li>Route:  /file
+				<ul>
+					<li>Beim Aufruf soll ein File erstellt werden mit dem aktuellen Datum. Dieser Wert soll ausgelesen werden und zum Client geschickt werden.</li>
+					<li>Mit 'fs' kann auf das File System zugegriffen werden: <a href="https://nodejs.org/api/fs.html" target="_blank">https://nodejs.org/api/fs.html</a>. </li>
+				</ul>
+			</li>
+		</ul>
+
+
+		<div class="solution">
+			<p><a href="Solution/Routing/numberCounter.js">Lösung für den Counter</a></p>
+			<p><a href="Solution/Routing/server.js">Lösung für Routing 1 und 2</a></p>
+		</div>
+
+		<h2>Routing 2</h2>
+		<p>Ergänzen Sie den Server von Routing 1 wie folgt:</p>
+		<p>Wenn "/ToSendHtml.html" angefragt wird, soll dessen HTML übertragen werden; dieselbe Funktionalität soll auch für das JavaScript File implementiert werden (ToSendJavaScript.js).</p>
+		<p>Informationen zum Response-Objekt finden Sie unter <a href="https://nodejs.org/api/http.html#http_class_http_serverresponse" target="_blank">https://nodejs.org/api/http.html#http_class_http_serverresponse</a></p>
+		<p>Eine Anfrage an "/ToSendHtml.html" kann so mit folgenden Schritten beantwortet werden:</p>
+		<ol>
+			<li>Laden Sie das HTML vom File-System mit 'fs'.</li>
+			<li>Schreiben Sie den richtigen Content-Type in das Response-Object: res.writeHeader(200, {"Content-Type": "text/html"}); </li>
+			<li>Schreiben Sie den den Inhalt des html's in das Response-Object: res.write(html) </li>
+			<li>Beenden Sie die Response: res.end();</li>
+			<li>Verwenden Sie dieselbe Vorgehensweise für "/ToSendJavaScript.js"</li>
+			<li>Vermeiden Sie Copy &amp; Paste</li>
+		</ol>
+		<p><img data-type="icon-difficult" src="../HSR.Template.Exercises/mind.svg" />Lösen Sie die Aufgabe mit der <a href="https://nodejs.org/api/fs.html#fs_fs_promises_api" target="_blank">"FS Promises API"</a>. </p>
+
+	  <div class="solution">
+		  <p><a href="Solution/Routing/server.js">Lösung für Routing 1 und 2</a></p>
+		  <p><a href="Solution/Routing/serverPromise.js">Lösung mit Promises</a></p>
+	  </div>
+
+
+
+	</body>
+</html>
